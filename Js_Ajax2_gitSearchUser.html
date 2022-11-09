@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .main_div{
+        padding: 15px;
+        background-color: rgb(249, 238, 224);
+        width: 600px;
+    }
+    #search{
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        border-color: gray;
+        background-color: transparent;
+        margin-left: 10px;
+    }
+    .main_inner_div{
+        display: flex;
+    }
+    #img{
+        width: 150px;
+        height: 150px;
+    }
+    #username, #login, #url, #blog, #city, #email{
+        float: right;
+    }
+    .inner_div{
+        width: 250px;
+    }
+    .inner_div1{
+        width: 350px;
+        margin-left: 60px;
+    }
+    p{
+        font-weight: bold;
+    }
+    p span{
+        font-weight: 400;
+    }
+</style>
+<body>
+    <div class="main_div">
+        <label>Search login:<input id="search" type="text"></label>
+            <hr>
+            <br>
+        <div class="main_inner_div">
+            <div class="inner_div">
+                <img id="img" src="https://avatarfiles.alphacoders.com/276/thumb-276254.png">
+                <p>Name:<span id="username">Tom Preston-Werner</span></p>
+                <hr>
+                <p>Login:<span id="login">mojombo</span></p>
+                <hr>
+            </div>
+            <div class="inner_div1">
+                <p>Url to github:<span><a id="url" href="">link</a></span></p>
+                <hr>
+                <p>Blog:<span><a id="blog" href="">link</a></span></p>
+                <hr>
+                <p>City:<span id="city"><a href="">link</a></span></p>
+                <hr>
+                <p>Email:<span><a id="email" href="">link</a></span></p>
+                <hr>
+                    <p>Followers:&nbsp;<span id="followers">100</span><span style="float: right;"><b>Following:&nbsp;</b><span id="following">100</span></span></p>
+                <hr>
+            </div>
+        </div>
+    </div>
+    <script>
+        const search = document.getElementById('search');
+        const username = document.getElementById('username');
+
+        search.addEventListener('change', SearchingUser);
+
+        
+
+        function SearchingUser(e) {
+            console.log("inside searchuser function");
+
+            let request;
+            if(window.XMLHttpRequest){
+                request = new XMLHttpRequest();
+            }
+            else 
+            {
+                request = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+
+            request.open("GET", "https://api.github.com/users/" + search.value);
+            request.responseType = "json";
+
+            request.onload = function(){
+            if(request.status == 200){
+                information = request.response;
+                console.log(information);
+
+                username.innerHTML = information.name;
+                login.innerHTML = information.login;
+                url.innerText = information.html_url;
+                blog.innerText = information.blog;
+
+                document.getElementById("url").href=`${information.html_url}`;
+                document.getElementById("blog").href=`${information.blog}`;
+
+                city.innerHTML = information.location;
+                if(information.email != null){
+                    email.innerHTML = information.email;
+                }
+                else{
+                    email.innerHTML = "N/A";
+                }
+                followers.innerHTML = information.followers;
+                following.innerHTML = information.following;
+                document.getElementById("img").src=`${information.avatar_url}`;
+            }
+        }
+        request.send();
+    }; 
+    </script>
+</body>
+</html>
